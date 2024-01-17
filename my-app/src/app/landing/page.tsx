@@ -2,7 +2,6 @@
 
 import React, { useEffect, useState } from 'react'
 
-
 const Landing = () => {
 
     const [isConnected, setIsConnected] = useState(false);

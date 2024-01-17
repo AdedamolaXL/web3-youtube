@@ -1,9 +1,8 @@
 import axios from "axios";
-import dotenv from 'dotenv';
 
-dotenv.config()
 
-const PINATA_JWT = process.env.PINATA_JWT;
+const PINATA_JWT = process.env.NEXT_PUBLIC_PINATA_JWT;
+
 
 const saveToIPFS = async (file: File) => {
     
@@ -13,21 +12,27 @@ const saveToIPFS = async (file: File) => {
     // add file to the form data
     formData.append("file", file)
 
-    var config = {
-        method: "post",
-        url: "https://api.pinata.cloud/pinning/pinFileToIPFS",
-        headers: {
-            authorization: `Bearer ${PINATA_JWT}`,
-            "content-type": "multipart/form-data",
-        },
-        data: formData,
-    };
+    const metadata = JSON.stringify({
+        name: "File name",
+    })
+    formData.append('pinataMetadata', metadata);
 
-    // Posting the form data to the IPFS API
-    const response = await axios(config);
+    const options = JSON.stringify({
+        cidVersion: 0,
+    })
+    formData.append('pinataOptions', options);
 
-    // returning the CID
-    return response.data.cid
-};
-
+    try{
+        const res = await axios.post("https://api.pinata.cloud/pinning/pinFileToIPFS", formData, {
+            maxBodyLength: Infinity,
+            headers: {
+            'Authorization': `Bearer ${PINATA_JWT}`
+        }
+        });
+        console.log(res.data);
+    } catch (error) {
+        console.log(error);
+    }  
+}
+   
 export default saveToIPFS;

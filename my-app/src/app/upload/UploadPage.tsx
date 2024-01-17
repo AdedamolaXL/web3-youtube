@@ -6,18 +6,20 @@ import { create } from "ipfs-http-client";
 import saveToIPFS from "../../utils/saveToIPFS";
 import { useCreateAsset } from "@livepeer/react";
 import getContract from "../../utils/getContract";
-import LivepeerClient from "@/clients/livepeer";
-import { LivepeerConfig } from "@livepeer/react";
+import uploadToLivepeer from "@/utils/uploadToLivepeer";
 
-
+type Asset = {
+  name: string;
+  file: File;
+};
 
 export type UploadData = {
-  video: string | undefined;
+  video: File | null;
   title: string;
   description: string;
   location: string;
   category: string;
-  thumbnail: string;
+  thumbnail: File | null;
   UploadedDate: number;
 };
 
@@ -32,12 +34,12 @@ export default function UploadPage() {
   const [thumbnail, setThumbnail] = useState<File>();
   const [video, setVideo] = useState<File>();
   const [uploadData, setUploadData] = useState<UploadData>({
-    video: '',
+    video: null,
     title: '',
     description: '',
     location: '',
     category: '',
-    thumbnail: '',
+    thumbnail: null,
     UploadedDate: 0,
   });
   
@@ -46,6 +48,8 @@ export default function UploadPage() {
   const thumbnailRef = useRef<HTMLInputElement>(null)
   const videoRef = useRef<HTMLInputElement>(null);
   
+ 
+
   const {
     mutate: createAsset,
     data: assets,
@@ -61,13 +65,13 @@ export default function UploadPage() {
             {
               name: video.name,
               file: video,
-              storage: {
-                ipfs: true,
-                metadata: {
-                  name: "interesting video",
-                  description: "a great description of the video",
-                },
-              },
+              // storage: {
+              //   ipfs: true,
+              //   metadata: {
+              //     name: "interesting video",
+              //     description: "a great description of the video",
+              //   },
+              // },
             },
           ] as const,
         }
@@ -84,57 +88,63 @@ export default function UploadPage() {
   const handleSubmit = async () => {
 
     // Calling the upload video function
-    await uploadVideo();
+    const videoAssets = await uploadVideo();
 
     // Calling the upload thumbnail function and getting the CID
     const thumbnailCID = await uploadThumbnail();
-
-   
-    // Creating a object to store the metadata
+    if (thumbnailCID) {
+      
+      // Creating a object to store the metadata
       let data = {
-        video: assets?.[0].id,
+        video: videoAssets as File,
         title,
         description,
         location,
         category,
-        thumbnail: thumbnailCID,
+        thumbnail: thumbnailCID as File,
         UploadedDate: Date.now(),
       };
       // Calling the saveVideo function and passing the metadata object
       console.log(data)
-      await saveVideo(data);
-
-      
-
-    
-  };
-
-  // Function to upload the video to IPFS
-  const uploadThumbnail = async () => {
-    
-    if (thumbnail) {
-      // Passing the file to the saveToIPFS function and getting the CID
-    const cid = await saveToIPFS(thumbnail);
-
-    // Returning the CID
-    return cid;
+      await saveVideo(data);     
     } else {
-      return null;
+
     }
     
   };
 
-  // Function to upload the video to Livepeer
-  const uploadVideo = async () => {
+  // Function to upload the video to IPFS
+  async function uploadThumbnail(): Promise<File | null> {
     
-    // Calling the createAsset function from the useCreateAsset hook to upload the video
-    createAsset?
-    ({
-      name: title,
-      file: video
-    }) : null
-
+    if (thumbnail) {
+      // Passing the file to the saveToIPFS function and getting the CID
+    const cid = await saveToIPFS(thumbnail);
+    
+    // Returning the CID
+    return thumbnail;
+    } else {
+      return null;
+    }
+   
   };
+
+
+
+
+  
+  // Function to upload the video to Livepeer
+async function uploadVideo(): Promise<File> {
+  if (video && createAsset) {
+    createAsset?.()
+
+    // Assuming you want to return the uploaded video file
+    return video;
+  } else {
+    throw new Error("Video is not available for upload.");
+  }
+}
+
+   
 
 
   // Function to save the video to the Contract
@@ -155,10 +165,9 @@ export default function UploadPage() {
     );
   };
 
-
   return (
 
-    <LivepeerConfig client={LivepeerClient}> 
+
 
     <div className="w-full h-screen bg-[#1a1c1f] flex flex-row">
       <div className="flex-1 flex flex-col">
@@ -307,7 +316,6 @@ export default function UploadPage() {
       </div>
     </div>
 
-    </LivepeerConfig>
     
   );
 }
