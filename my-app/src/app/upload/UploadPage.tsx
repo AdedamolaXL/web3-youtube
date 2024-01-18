@@ -7,6 +7,8 @@ import saveToIPFS from "../../utils/saveToIPFS";
 import { useCreateAsset } from "@livepeer/react";
 import getContract from "../../utils/getContract";
 import uploadToLivepeer from "@/utils/uploadToLivepeer";
+import { LivepeerConfig } from "@livepeer/react";
+import LivepeerClient from "@/clients/livepeer";
 
 type Asset = {
   name: string;
@@ -22,8 +24,6 @@ export type UploadData = {
   thumbnail: File | null;
   UploadedDate: number;
 };
-
-
 
 export default function UploadPage() {
   // Creating state for the input field
@@ -167,7 +167,9 @@ async function uploadVideo(): Promise<File> {
 
   return (
 
+    <LivepeerConfig client={LivepeerClient}>
 
+    
 
     <div className="w-full h-screen bg-[#1a1c1f] flex flex-row">
       <div className="flex-1 flex flex-col">
@@ -315,7 +317,7 @@ async function uploadVideo(): Promise<File> {
         />
       </div>
     </div>
-
+    </LivepeerConfig>
     
   );
 }
