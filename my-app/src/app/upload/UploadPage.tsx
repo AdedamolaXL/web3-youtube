@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { BiCloud, BiMusic, BiPlus } from "react-icons/bi";
 import { create } from "ipfs-http-client";
 import saveToIPFS from "../../utils/saveToIPFS";
@@ -16,12 +16,12 @@ type Asset = {
 };
 
 export type UploadData = {
-  video: File | null;
+  video: string | null;
   title: string;
   description: string;
   location: string;
   category: string;
-  thumbnail: File | null;
+  thumbnail: string | null;
   UploadedDate: number;
 };
 
@@ -34,21 +34,20 @@ export default function UploadPage() {
   const [thumbnail, setThumbnail] = useState<File>();
   const [video, setVideo] = useState<File>();
   const [uploadData, setUploadData] = useState<UploadData>({
-    video: null,
+    video: '',
     title: '',
     description: '',
     location: '',
     category: '',
-    thumbnail: null,
+    thumbnail: '',
     UploadedDate: 0,
   });
+
   
 
   //  Creating a ref for thumbnail and video
   const thumbnailRef = useRef<HTMLInputElement>(null)
   const videoRef = useRef<HTMLInputElement>(null);
-  
- 
 
   const {
     mutate: createAsset,
@@ -65,30 +64,30 @@ export default function UploadPage() {
             {
               name: video.name,
               file: video,
-              // storage: {
-              //   ipfs: true,
-              //   metadata: {
-              //     name: "interesting video",
-              //     description: "a great description of the video",
-              //   },
-              // },
+              storage: {
+                ipfs: true,
+                metadata: {
+                  name: "interesting video",
+                  description: "a great description of the video",
+                },
+              },
             },
           ] as const,
         }
       : null,
   );
+  
 
   const goBack = () => {
     window.history.back()
   }
 
 
-
   // When a user clicks on the upload button
   const handleSubmit = async () => {
 
     // Calling the upload video function
-    const videoAssets = await uploadVideo();
+    const videoCID = await uploadVideo();
 
     // Calling the upload thumbnail function and getting the CID
     const thumbnailCID = await uploadThumbnail();
@@ -96,56 +95,69 @@ export default function UploadPage() {
       
       // Creating a object to store the metadata
       let data = {
-        video: videoAssets as File,
+        video: videoCID,
         title,
         description,
         location,
         category,
-        thumbnail: thumbnailCID as File,
+        thumbnail: thumbnailCID,
         UploadedDate: Date.now(),
       };
       // Calling the saveVideo function and passing the metadata object
       console.log(data)
       await saveVideo(data);     
     } else {
-
-    }
-    
+    } 
   };
 
   // Function to upload the video to IPFS
-  async function uploadThumbnail(): Promise<File | null> {
-    
+  async function uploadThumbnail(): Promise<string | null> {
     if (thumbnail) {
-      // Passing the file to the saveToIPFS function and getting the CID
-    const cid = await saveToIPFS(thumbnail);
-    
-    // Returning the CID
-    return thumbnail;
+      try {
+        // Passing the file to the saveToIPFS function and getting the CID
+        const cid = await saveToIPFS(thumbnail);
+        return cid;
+      } catch (error) {
+        console.error("Error saving thumbnail to IPFS:", error);
+        return null;
+      }
     } else {
       return null;
     }
    
   };
 
-
-
-
   
   // Function to upload the video to Livepeer
-async function uploadVideo(): Promise<File> {
-  if (video && createAsset) {
-    createAsset?.()
+async function uploadVideo(): Promise<string | null> {
+  
+  await createAsset?.()
 
-    // Assuming you want to return the uploaded video file
-    return video;
+  // Wait for the status to be "success" or timeout after a certain duration
+  const timeoutDuration = 5000; // 5 seconds timeout (adjust as needed)
+  const startTime = Date.now();
+
+  while (status !== "success" && Date.now() - startTime < timeoutDuration) {
+    await new Promise((resolve) => setTimeout(resolve, 100)); // Wait for 100 milliseconds before checking again
+  }
+
+   // Log the status and assets for debugging
+   console.log("Status:", status);
+   console.log("Assets:", assets);
+
+  // Check the status of the asset creation
+  if (status === "success"  && assets && assets.length > 0) {
+    const asset = assets?.[0]
+    console.log(asset)
+
+    // Access the CID
+    return asset?.storage?.ipfs?.cid || null; 
   } else {
-    throw new Error("Video is not available for upload.");
+    // Handle the case where asset creation was not successful
+    console.error("Error creating the asset")
+    return null;
   }
 }
-
-   
-
 
   // Function to save the video to the Contract
   const saveVideo = async (data: UploadData = uploadData) => {
@@ -160,10 +172,11 @@ async function uploadVideo(): Promise<File> {
       data.location,
       data.category,
       data.thumbnail,
-      false,
       data.UploadedDate
     );
   };
+
+
 
   return (
 
