@@ -1,0 +1,13 @@
+query MyQuery {
+    videos {
+      author
+      category
+      createdAt
+      date
+      description
+      hash
+      id
+      location
+      thumbnailHash
+      title
+    }

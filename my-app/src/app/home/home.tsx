@@ -23,32 +23,20 @@ export default function Home() {
 
   // Query the videos from the the graph
   const GET_VIDEOS = gql`
-    query videos(
-      $first: Int
-      $skip: Int
-      $orderBy: Video_orderBy
-      $orderDirection: OrderDirection
-      $where: Video_filter
-    ) {
-      videos(
-        first: $first
-        skip: $skip
-        orderBy: $orderBy
-        orderDirection: $orderDirection
-        where: $where
-      ) {
-        id
-        hash
-        title
-        description
-        location
-        category
-        thumbnailHash
-        date
-        author
-        createdAt
-      }
+  query MyQuery {
+    videos {
+      author
+      category
+      createdAt
+      date
+      description
+      hash
+      id
+      location
+      thumbnailHash
+      title
     }
+  }
   `;
 
   // Function to get the videos from the graph
@@ -80,22 +68,22 @@ export default function Home() {
     ApolloClient
       .query({
         query: GET_VIDEOS,
-        variables: {
-          first: 200,
-          skip: 0,
-          orderBy: "createdAt",
-          orderDirection: "desc",
+        // variables: {
+        //   first: 200,
+        //   skip: 0,
+        //   orderBy: "createdAt",
+        //   orderDirection: "desc",
 
-          // Search for videos
-          where: {
-            ...(query && {
-                title_contains_nocase:query,
-            }),
-            ...(category && {
-              category_contains_nocase: category,
-            }),
-          },
-        },
+        //   // Search for videos
+        //   where: {
+        //     ...(query && {
+        //         title_contains_nocase:query,
+        //     }),
+        //     ...(category && {
+        //       category_contains_nocase: category,
+        //     }),
+        //   },
+        // },
         fetchPolicy: "network-only",
       })
       .then(({ data }) => {
@@ -115,7 +103,7 @@ export default function Home() {
     
     // Runs the function getVideos when the component is mounted
     getVideos();
-  }, [query, category]);
+  }, []);
   
   return (
       

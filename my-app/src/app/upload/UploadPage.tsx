@@ -174,8 +174,34 @@ async function uploadVideo(): Promise<string | null> {
       data.thumbnail,
       data.UploadedDate
     );
+
+    // Log a message indicating that the video was uploaded
+    console.log("Video uploaded to the contract:", data.title);
   };
 
+
+  fetch("https://api.thegraph.com/subgraphs/name/adedamolaxl/youtube-clone", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      query: `
+        {
+          videos {
+            id
+            title
+            description
+            category
+            // Add other necessary fields
+          }
+        }
+      `,
+    }),
+  })
+    .then(response => response.json())
+    .then(data => console.log("GraphQL Query Result:", data))
+    .catch(error => console.error("Error fetching videos:", error));
 
 
   return (

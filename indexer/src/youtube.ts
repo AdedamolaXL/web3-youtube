@@ -1,17 +1,23 @@
-import { VideoUploaded as VideoUploadedEvent } from "../generated/Youtube/Youtube";
-import { Video } from "../generated/schema";
+import { VideoUploaded as VideoUploadedEvent } from "../generated/Youtube/Youtube"
+import { VideoUploaded } from "../generated/schema"
 
 export function handleVideoUploaded(event: VideoUploadedEvent): void {
-  let video = new Video(
-    event.params.id.toString()
+  let entity = new VideoUploaded(
+    event.transaction.hash.concatI32(event.logIndex.toI32())
   )
-  video.hash = event.params.hash;
-  video.title = event.params.title;
-  video.description = event.params.description;
-  video.location = event.params.location;
-  video.thumbnailHash = event.params.thumbnailHash;
-  video.date = event.params.date;
-  video.author = event.params.author;
-  video.createdAt = event.block.timestamp;
-  video.save();
+  entity.Youtube_id = event.params.id
+  entity.hash = event.params.hash
+  entity.title = event.params.title
+  entity.description = event.params.description
+  entity.location = event.params.location
+  entity.category = event.params.category
+  entity.thumbnailHash = event.params.thumbnailHash
+  entity.date = event.params.date
+  entity.author = event.params.author
+
+  entity.blockNumber = event.block.number
+  entity.blockTimestamp = event.block.timestamp
+  entity.transactionHash = event.transaction.hash
+
+  entity.save()
 }

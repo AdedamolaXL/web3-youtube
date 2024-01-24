@@ -1,17 +1,17 @@
 {
-  "name": "yt-clone",
+  "name": "web3-youtube",
   "license": "UNLICENSED",
   "scripts": {
     "codegen": "graph codegen",
     "build": "graph build",
-    "deploy": "graph deploy --node https://api.thegraph.com/deploy/ roninn/yt-clone",
-    "create-local": "graph create --node http://localhost:8020/ roninn/yt-clone",
-    "remove-local": "graph remove --node http://localhost:8020/ roninn/yt-clone",
-    "deploy-local": "graph deploy --node http://localhost:8020/ --ipfs http://localhost:5001 roninn/yt-clone",
+    "deploy": "graph deploy --node https://api.thegraph.com/deploy/ adedamolaxl/web3-youtube",
+    "create-local": "graph create --node http://localhost:8020/ adedamolaxl/web3-youtube",
+    "remove-local": "graph remove --node http://localhost:8020/ adedamolaxl/web3-youtube",
+    "deploy-local": "graph deploy --node http://localhost:8020/ --ipfs http://localhost:5001 adedamolaxl/web3-youtube",
     "test": "graph test"
   },
   "dependencies": {
-    "@graphprotocol/graph-cli": "0.64.1",
+    "@graphprotocol/graph-cli": "0.65.0",
     "@graphprotocol/graph-ts": "0.32.0"
   },
   "devDependencies": { "matchstick-as": "0.5.0" }
