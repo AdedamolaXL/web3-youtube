@@ -4,7 +4,7 @@ import LivepeerClient from "@/clients/livepeer";
 import { LivepeerConfig } from "@livepeer/react";
 import UploadPage from "./UploadPage";
 import { ApolloProvider } from "@apollo/client";
-import client from "@/clients/apollo";
+import ApolloClient from "@/clients/apollo";
 
 export type UploadData = {
     video: string | undefined;
@@ -20,7 +20,7 @@ const Upload = () => {
 
     return (
 
-        <ApolloProvider client={client}>
+        <ApolloProvider client={ApolloClient}>
             <LivepeerConfig client={LivepeerClient}>
                 <UploadPage />
             </LivepeerConfig>

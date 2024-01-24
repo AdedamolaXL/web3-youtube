@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import { useApolloClient, gql } from "@apollo/client";
-import  Video  from "../../components/Videos";
+import  Videos  from "../../components/Videos";
 import VideoComponent from "../../components/VideoContainer";
 
 export type Video = {
@@ -105,7 +105,7 @@ export default function VideoPage() {
                   } }
                   key={video.id}
                 >
-                  <Video video={video} horizontal={true} />
+                  <Videos video={video} horizontal={true} />
                 </div>
               ))}
             </div>

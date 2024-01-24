@@ -1,8 +1,10 @@
-import { ApolloClient, InMemoryCache} from '@apollo/client';
+import { ApolloClient as Apollo, InMemoryCache} from '@apollo/client';
+import { createClient } from 'urql'
 
-const client = new ApolloClient({
+const ApolloClient = new Apollo({
     uri: "https://api.thegraph.com/subgraphs/name/adedamolaxl/youtube-clone",
     cache: new InMemoryCache(),
+    connectToDevTools: true,
 });
 
-export default client;
+export default ApolloClient;

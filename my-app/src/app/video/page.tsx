@@ -1,7 +1,7 @@
 'use client'
 
 import React, { useEffect, useState } from "react";
-import client  from "@/clients/apollo";
+import ApolloClient  from "@/clients/apollo";
 import { ApolloProvider } from "@apollo/client";
 import { LivepeerConfig } from "@livepeer/react";
 import LivepeerClient from "@/clients/livepeer";
@@ -15,7 +15,7 @@ const Video = () => {
 
     return (
 
-        <ApolloProvider client={client}>
+        <ApolloProvider client={ApolloClient}>
             <LivepeerConfig client={LivepeerClient}>
                 <VideoPage />
             </LivepeerConfig>
