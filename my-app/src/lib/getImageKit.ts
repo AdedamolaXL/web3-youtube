@@ -4,16 +4,12 @@
  * @returns ImageKit Url
  */
 
-// const IMAGEKIT_URL = 'https://ik.imagekit.io' + process.env.NEXT_PUBLIC_IMAGEKIT_ID + '/'
+const IMAGEKIT_ID = process.env.NEXT_PUBLIC_IMAGEKIT_ID || ''
 
 const imagekitURL = (url: string, name?: string, blur?: string): string => {
-    const IMAGEKIT_URL = 'https://ik.imagekit.io' + process.env.NEXT_PUBLIC_IMAGEKIT_ID + '/'
+    const IMAGEKIT_URL = 'https://ik.imagekit.io/' + IMAGEKIT_ID + '/ipfs'
     
-    return blur
-    ? `${IMAGEKIT_URL}/tr:di-placheholder.webp, w-30, h-30,bl-6/${url}`
-    : name
-    ? `${IMAGEKIT_URL}/tr:n-${name}, tr:di-placeholder.webp/${url}`
-    : `${IMAGEKIT_URL}/tr:di-placeholder.webp/${url}`;
-}
+    return `${IMAGEKIT_URL}/tr:w-30,h-30/${url}`;
+};
 
 export default imagekitURL

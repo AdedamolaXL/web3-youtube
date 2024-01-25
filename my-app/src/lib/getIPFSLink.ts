@@ -4,8 +4,8 @@
  */
 
 const getIPFSLink = (hash: string): string => {
-    const gateway = 'https://w3s.link/ipfs/'
-    return `${gateway}${hash}`;
+    
+    return `${hash}`;
 };
 
 export default getIPFSLink

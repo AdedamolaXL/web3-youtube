@@ -9,7 +9,9 @@ import Background from "../../components/Background"
 import Header from "../../layout/Header"
 import Sidebar from "../../layout/Sidebar"
 
-
+interface IProps {
+  horizontal?: Boolean;
+}
 
 export default function Home() {
   // Creating a state to store the uploaded video
@@ -29,6 +31,9 @@ export default function Home() {
        Youtube_id
        hash
        title
+       thumbnailHash
+       category
+       author
      }
    }
  `;

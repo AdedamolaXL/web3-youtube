@@ -9,6 +9,7 @@ export type Video = {
   id: string | undefined;
 }
 
+
 export default function VideoPage() {
   const [video, setVideo] = useState<Video | null>(null);
   const [relatedVideos, setRelatedVideos] = useState<Video[]>([]);
