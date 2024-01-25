@@ -13,7 +13,7 @@ import Sidebar from "../../layout/Sidebar"
 
 export default function Home() {
   // Creating a state to store the uploaded video
-  const [videos, setVideos] = useState<string[]>([]);
+  const [videos, setVideos] = useState([]);
   const [loading, setLoading] = useState<Boolean>(true);
   const [query, setQuery] = useState<string>("");
   const [category, setCategory] = useState<string>("")
@@ -21,99 +21,53 @@ export default function Home() {
   // Get the client from the useApolloClient hook
   
 
-  // Query the videos from the the graph
-  const GET_VIDEOS = gql`
-  query MyQuery {
-    videos {
-      author
-      category
-      createdAt
-      date
-      description
-      hash
-      id
-      location
-      thumbnailHash
-      title
-    }
-  }
-  `;
+   // Query the videoUploadeds from the graph
+   const GET_VIDEO_UPLOADS = gql`
+   query {
+     videoUploadeds {
+       id
+       Youtube_id
+       hash
+       title
+     }
+   }
+ `;
 
-  // Function to get the videos from the graph
-  const getVideos = async () => {
+ // Function to get the videos from the graph
+ const getVideos = async () => {
+   try {
     setLoading(true);
+     const { data } = await ApolloClient.query({
+       query: GET_VIDEO_UPLOADS,
+       fetchPolicy: "network-only",
+     });
 
+     console.log("VideoUploadeds", data.videoUploadeds);
 
+     // Set the videoUploadeds to the state
+     setVideos(data.videoUploadeds);
+     setLoading(false);
+   } catch (error) {
+     console.error("Error fetching videoUploadeds:", error);
+     setLoading(false);
+   }
+ };
 
+ useEffect(() => {
+   // Runs the function getVideos when the component is mounted
+   getVideos();
+ }, []);
 
-
-
-    console.log("Query Variables:", {
-      first: 200,
-      skip: 0,
-      orderBy: "createdAt",
-      orderDirection: "desc",
-      where: {
-        ...(query && {
-          title_contains_nocase: query,
-        }),
-        ...(category && {
-          category_contains_nocase: category,
-        }),
-      },
-    });
-  
-
-    // Query the videos from the graph
-    ApolloClient
-      .query({
-        query: GET_VIDEOS,
-        // variables: {
-        //   first: 200,
-        //   skip: 0,
-        //   orderBy: "createdAt",
-        //   orderDirection: "desc",
-
-        //   // Search for videos
-        //   where: {
-        //     ...(query && {
-        //         title_contains_nocase:query,
-        //     }),
-        //     ...(category && {
-        //       category_contains_nocase: category,
-        //     }),
-        //   },
-        // },
-        fetchPolicy: "network-only",
-      })
-      .then(({ data }) => {
-        console.log("Videos", data.videos);
-
-        // Set the videos to the state
-        setVideos(data.videos);
-        setLoading(false);
-      })
-      .catch((error) => {
-        console.error("Error fetching videos:", error);
-        setLoading(false);
-      });
-  };
-
-  useEffect(() => {
-    
-    // Runs the function getVideos when the component is mounted
-    getVideos();
-  }, []);
   
   return (
       
-        <Background className="w-full">
+        
         <div className="w-full bg-[#1a1c1f] flex flex-row">
-            <Sidebar updateCategory={(category) => setCategory(category)} />
+           
              <div className="flex flex-row flex-wrap">
 
               <div className="flex-1 h-screen flex flex-col">
-                <Header search={(text) => setQuery(text)} />
+                
                 <div className="flex flex-row flex-wrap">
               </div>
               {loading ? (
@@ -121,20 +75,20 @@ export default function Home() {
                 {Array(10)
                   .fill(0)
                   .map((_, index) => (
-                    <div key={index} className="w-50">
+                    <div key={index} className="w-80">
                       <Loader />
                     </div>
                   ))}
                 </>
               ) : (
-                videos?.map((video: any) => (
-                  <Videos video={video} horizontal={false} />
+                videos?.map((video:any) => (
+                  <Videos video={video} key={video.id} horizontal={false} />
                 ))
               )}
            </div>       
         </div>
         </div>
-        </Background>
+        
 
   );
 }
