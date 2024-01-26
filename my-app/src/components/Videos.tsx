@@ -4,6 +4,8 @@ import getImage from '../lib/getImage';
 import { IVideo } from "@/types";
 import Link from "next/link";
 
+import { useRouter } from "next/router";
+
 interface IProps {
   video: IVideo
   horizontal?: Boolean;
@@ -12,7 +14,7 @@ interface IProps {
 const Videos: React.FC<IProps> = ({ horizontal, video }) => {
 
  return (
-  <Link className="cursor-pointer" href={`/video/${video.id}`}>
+  <Link href="/video/[id]" as={`/video/${video.id}`}>
       <div
         className={`${
           horizontal

@@ -20,8 +20,7 @@ export default function Home() {
   const [query, setQuery] = useState<string>("");
   const [category, setCategory] = useState<string>("")
 
-  // Get the client from the useApolloClient hook
-  
+
 
    // Query the videoUploadeds from the graph
    const GET_VIDEO_UPLOADS = gql`
@@ -87,7 +86,7 @@ export default function Home() {
                 </>
               ) : (
                 videos?.map((video:any) => (
-                  <Videos video={video} key={video.id} horizontal={false} />
+                  <Videos video={video} horizontal={false} />
                 ))
               )}
            </div>       

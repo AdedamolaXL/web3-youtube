@@ -7,6 +7,7 @@
   "dependencies": {
     "@apollo/client": "^3.8.8",
     "@livepeer/react": "^3.1.9",
+    "avvvatars-react": "^0.4.2",
     "dotenv": "^16.3.1",
     "ethers": "^6.9.2",
     "graphql": "^16.8.1",
