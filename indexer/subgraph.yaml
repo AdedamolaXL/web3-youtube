@@ -6,9 +6,9 @@ dataSources:
     name: Youtube
     network: mumbai
     source:
-      address: "0x5FbDB2315678afecb367f032d93F642f64180aa3"
+      address: "0x68120Fd3E337221AF1DB7b5C6FF6F601496854Bc"
       abi: Youtube
-      startBlock: 8559640
+      startBlock: 45270695
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7
