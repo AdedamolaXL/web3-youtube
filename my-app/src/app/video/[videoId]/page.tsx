@@ -1,15 +1,14 @@
 'use client'
 
-import { useRouter } from "next/router";
+import { useParams } from "next/navigation";
 import React, { useEffect, useState } from "react";
-import  Videos from "../../components/Videos";
+import  Videos from "../../../components/Videos";
 import ApolloClient from "@/clients/apollo";
 import Link from "next/link";
 import moment from 'moment';
 import { BiCheck } from "react-icons/bi";
 import Avvvatars from 'avvvatars-react'
 import { IVideo } from "@/types";
-import VideoComponent from "../../components/VideoContainer";
 import { gql } from "@apollo/client";
 import Player from "@/components/Player";
 
@@ -18,19 +17,25 @@ import { LivepeerConfig } from "@livepeer/react";
 import LivepeerClient from "@/clients/livepeer";
 
 
+
 export type Video = {
   id: string;
   // other properties...
 };
 
+
+
 export default function Video() {
-  const router = useRouter()
-  const { id } = router.query
+  
   const [video, setVideo] = useState<IVideo | null>(null)
   const [relatedVideos, setRelatedVideos] = useState<IVideo[]>([])
 
+  const params = useParams();
+  const videoId = params.videoId;
 
-  console.log("Router Query ID:", id);
+  console.log(videoId)
+  
+  console.log(params)
 
   const GET_VIDEO_UPLOADS = gql`
     query {
@@ -54,10 +59,20 @@ export default function Video() {
         fetchPolicy: "network-only",
       });
   
-    setRelatedVideos(data.videoUploadeds.filter((v: Video) => v.id !== id))
-    const video = data?.videoUploadeds?.find((video: Video) => String(video.id)=== String(id))
+    setRelatedVideos(data.videoUploadeds.filter((v: Video) => v.id !== videoId))
+    const video = data?.videoUploadeds?.find((video: Video) => (video.id)=== (videoId))
+
+    console.log(video)
+
+    if (!video) {
+      console.log(`Video with ID ${videoId} not found.`);
+    } else {
+      console.log('Found video:', video);
+    }
+
     setVideo(video)
     console.log('videos', data.videoUploadeds)
+    
  
   } catch(err) {
     console.error("err", err);
@@ -67,7 +82,15 @@ export default function Video() {
 
   useEffect(() => {
     getVideos()
-  }, [id])
+  }, [videoId])
+
+
+
+    // Conditional rendering
+    if (!video) {
+      // You can render a loading state or return null
+      return <p>Loading...</p>;
+    }
 
   return (
     
@@ -78,7 +101,7 @@ export default function Video() {
         {video && (
           <div className="flex flex-col m-10 justify-between      lg:flex-row">
             <div className="lg:w-4/6 w-6/6">
-              <Player id={video.id} />
+              <Player id={video.hash} />
               <div className="border-border-light dark:border-border-dark flex flex-row justify-between border b-2 py-4">
               <div>
                 <h3 className="text-transform: text-2xl capitalize dark:text-white">

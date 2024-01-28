@@ -22,6 +22,8 @@ contract Youtube {
         string category;
         string thumbnailHash;
         string date;
+        string duration;
+        string livepeerID;
         address author;
     }
 
@@ -35,6 +37,8 @@ contract Youtube {
         string category,
         string thumbnailHash,
         string date,
+        string duration,
+        string livepeerID,
         address author
     );
 
@@ -48,7 +52,9 @@ contract Youtube {
         string memory _location,
         string memory _category,
         string memory _thumbnailHash,
-        string memory _date
+        string memory _date,
+        string memory _duration,
+        string memory _livepeerID
     ) public {
         // Validating the video hash, title and author's address
         require(bytes(_videoHash).length > 0);
@@ -68,6 +74,8 @@ contract Youtube {
             _category,
             _thumbnailHash,
             _date,
+            _duration,
+            _livepeerID,
             msg.sender
         );
 
@@ -81,6 +89,8 @@ contract Youtube {
             _category,
             _thumbnailHash,
             _date,
+            _duration,
+            _livepeerID,
             msg.sender
         );
 

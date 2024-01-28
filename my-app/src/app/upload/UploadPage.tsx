@@ -23,7 +23,15 @@ export type UploadData = {
   category: string;
   thumbnail: string | null;
   UploadedDate: number;
+  duration: number | null;
+  livepeerID: string | null
 };
+
+interface UploadVideoParams {
+  videoCID: string | null;
+  duration: number | null;
+  livepeerID: string | null;
+}
 
 export default function UploadPage() {
   // Creating state for the input field
@@ -41,6 +49,8 @@ export default function UploadPage() {
     category: '',
     thumbnail: '',
     UploadedDate: 0,
+    duration: 0,
+    livepeerID: ''
   });
 
   
@@ -87,7 +97,12 @@ export default function UploadPage() {
   const handleSubmit = async () => {
 
     // Calling the upload video function
-    const videoCID = await uploadVideo();
+    const videoParams = await uploadVideo();
+    const videoCID = videoParams?.videoCID ?? '';
+    const duration = videoParams?.duration ?? null;
+    const livepeerID = videoParams?.livepeerID ?? '';
+
+    console.log(duration, livepeerID, videoCID);
 
     // Calling the upload thumbnail function and getting the CID
     const thumbnailCID = await uploadThumbnail();
@@ -102,7 +117,10 @@ export default function UploadPage() {
         category,
         thumbnail: thumbnailCID,
         UploadedDate: Date.now(),
+        duration: duration,
+        livepeerID: livepeerID
       };
+      
       // Calling the saveVideo function and passing the metadata object
       console.log(data)
       await saveVideo(data);     
@@ -129,7 +147,7 @@ export default function UploadPage() {
 
   
   // Function to upload the video to Livepeer
-async function uploadVideo(): Promise<string | null> {
+async function uploadVideo(): Promise<UploadVideoParams | null> {
   
   await createAsset?.()
 
@@ -150,8 +168,15 @@ async function uploadVideo(): Promise<string | null> {
     const asset = assets?.[0]
     console.log(asset)
 
-    // Access the CID
-    return asset?.storage?.ipfs?.cid || null; 
+    // Access the CID and other parameters
+    const videoParams : UploadVideoParams = {
+      videoCID: asset?.storage?.ipfs?.cid || null,
+      duration: asset?.videoSpec?.duration || null,
+      livepeerID: asset?.id || null
+    }
+    return videoParams
+    
+    
   } else {
     // Handle the case where asset creation was not successful
     console.error("Error creating the asset")
@@ -172,7 +197,9 @@ async function uploadVideo(): Promise<string | null> {
       data.location,
       data.category,
       data.thumbnail,
-      data.UploadedDate
+      data.UploadedDate,
+      data.duration,
+      data.livepeerID
     );
 
     // Log a message indicating that the video was uploaded
@@ -180,28 +207,28 @@ async function uploadVideo(): Promise<string | null> {
   };
 
 
-  fetch("https://api.thegraph.com/subgraphs/name/adedamolaxl/youtube-clone", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      query: `
-        {
-          videos {
-            id
-            title
-            description
-            category
-            // Add other necessary fields
-          }
-        }
-      `,
-    }),
-  })
-    .then(response => response.json())
-    .then(data => console.log("GraphQL Query Result:", data))
-    .catch(error => console.error("Error fetching videos:", error));
+  // fetch("https://api.thegraph.com/subgraphs/name/adedamolaxl/youtube-clone", {
+  //   method: "POST",
+  //   headers: {
+  //     "Content-Type": "application/json",
+  //   },
+  //   body: JSON.stringify({
+  //     query: `
+  //       {
+  //         videos {
+  //           id
+  //           title
+  //           description
+  //           category
+  //           // Add other necessary fields
+  //         }
+  //       }
+  //     `,
+  //   }),
+  // })
+  //   .then(response => response.json())
+  //   .then(data => console.log("GraphQL Query Result:", data))
+  //   .catch(error => console.error("Error fetching videos:", error));
 
 
   return (

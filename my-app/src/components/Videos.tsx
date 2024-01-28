@@ -4,7 +4,7 @@ import getImage from '../lib/getImage';
 import { IVideo } from "@/types";
 import Link from "next/link";
 
-import { useRouter } from "next/router";
+import { useParams } from "next/navigation";
 
 interface IProps {
   video: IVideo
@@ -12,9 +12,10 @@ interface IProps {
 }
 
 const Videos: React.FC<IProps> = ({ horizontal, video }) => {
+  const params = useParams <{slug:string}>
 
  return (
-  <Link href="/video/[id]" as={`/video/${video.id}`}>
+  <Link href={`/video/${video.id}`}>
       <div
         className={`${
           horizontal
