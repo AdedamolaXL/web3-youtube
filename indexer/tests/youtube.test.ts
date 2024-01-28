@@ -25,6 +25,8 @@ describe("Describe entity assertions", () => {
     let category = "Example string value"
     let thumbnailHash = "Example string value"
     let date = "Example string value"
+    let duration = "Example string value"
+    let livepeerID = "Example string value"
     let author = Address.fromString(
       "0x0000000000000000000000000000000000000001"
     )
@@ -37,6 +39,8 @@ describe("Describe entity assertions", () => {
       category,
       thumbnailHash,
       date,
+      duration,
+      livepeerID,
       author
     )
     handleVideoUploaded(newVideoUploadedEvent)
@@ -93,6 +97,18 @@ describe("Describe entity assertions", () => {
       "VideoUploaded",
       "0xa16081f360e3847006db660bae1c6d1b2e17ec2a-1",
       "date",
+      "Example string value"
+    )
+    assert.fieldEquals(
+      "VideoUploaded",
+      "0xa16081f360e3847006db660bae1c6d1b2e17ec2a-1",
+      "duration",
+      "Example string value"
+    )
+    assert.fieldEquals(
+      "VideoUploaded",
+      "0xa16081f360e3847006db660bae1c6d1b2e17ec2a-1",
+      "livepeerID",
       "Example string value"
     )
     assert.fieldEquals(

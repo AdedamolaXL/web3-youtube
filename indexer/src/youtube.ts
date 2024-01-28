@@ -13,6 +13,8 @@ export function handleVideoUploaded(event: VideoUploadedEvent): void {
   entity.category = event.params.category
   entity.thumbnailHash = event.params.thumbnailHash
   entity.date = event.params.date
+  entity.duration = event.params.duration
+  entity.livepeerID = event.params.livepeerID
   entity.author = event.params.author
 
   entity.blockNumber = event.block.number

@@ -53,6 +53,18 @@
       },
       {
         "indexed": false,
+        "internalType": "string",
+        "name": "duration",
+        "type": "string"
+      },
+      {
+        "indexed": false,
+        "internalType": "string",
+        "name": "livepeerID",
+        "type": "string"
+      },
+      {
+        "indexed": false,
         "internalType": "address",
         "name": "author",
         "type": "address"
@@ -76,7 +88,9 @@
       { "internalType": "string", "name": "_location", "type": "string" },
       { "internalType": "string", "name": "_category", "type": "string" },
       { "internalType": "string", "name": "_thumbnailHash", "type": "string" },
-      { "internalType": "string", "name": "_date", "type": "string" }
+      { "internalType": "string", "name": "_date", "type": "string" },
+      { "internalType": "string", "name": "_duration", "type": "string" },
+      { "internalType": "string", "name": "_livepeerID", "type": "string" }
     ],
     "name": "uploadVideo",
     "outputs": [],
@@ -102,6 +116,8 @@
       { "internalType": "string", "name": "category", "type": "string" },
       { "internalType": "string", "name": "thumbnailHash", "type": "string" },
       { "internalType": "string", "name": "date", "type": "string" },
+      { "internalType": "string", "name": "duration", "type": "string" },
+      { "internalType": "string", "name": "livepeerID", "type": "string" },
       { "internalType": "address", "name": "author", "type": "address" }
     ],
     "stateMutability": "view",

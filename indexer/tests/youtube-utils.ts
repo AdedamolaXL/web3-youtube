@@ -11,6 +11,8 @@ export function createVideoUploadedEvent(
   category: string,
   thumbnailHash: string,
   date: string,
+  duration: string,
+  livepeerID: string,
   author: Address
 ): VideoUploaded {
   let videoUploadedEvent = changetype<VideoUploaded>(newMockEvent())
@@ -46,6 +48,12 @@ export function createVideoUploadedEvent(
   )
   videoUploadedEvent.parameters.push(
     new ethereum.EventParam("date", ethereum.Value.fromString(date))
+  )
+  videoUploadedEvent.parameters.push(
+    new ethereum.EventParam("duration", ethereum.Value.fromString(duration))
+  )
+  videoUploadedEvent.parameters.push(
+    new ethereum.EventParam("livepeerID", ethereum.Value.fromString(livepeerID))
   )
   videoUploadedEvent.parameters.push(
     new ethereum.EventParam("author", ethereum.Value.fromAddress(author))

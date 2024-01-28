@@ -8,6 +8,8 @@ type VideoUploaded @entity(immutable: true) {
   category: String! # string
   thumbnailHash: String! # string
   date: String! # string
+  duration: String! # string
+  livepeerID: String! # string
   author: Bytes! # address
   blockNumber: BigInt!
   blockTimestamp: BigInt!

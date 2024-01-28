@@ -6,9 +6,9 @@ dataSources:
     name: Youtube
     network: mumbai
     source:
-      address: "0x0532d0A87B6013a8A086C37D39BC1EB013abC2f4"
+      address: "0x5FbDB2315678afecb367f032d93F642f64180aa3"
       abi: Youtube
-      startBlock: 44388379
+      startBlock: 8559640
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7
@@ -19,6 +19,6 @@ dataSources:
         - name: Youtube
           file: ./abis/Youtube.json
       eventHandlers:
-        - event: VideoUploaded(uint256,string,string,string,string,string,string,string,address)
+        - event: VideoUploaded(uint256,string,string,string,string,string,string,string,string,string,address)
           handler: handleVideoUploaded
       file: ./src/youtube.ts
