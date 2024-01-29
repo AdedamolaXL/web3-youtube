@@ -33,6 +33,7 @@ export default function Home() {
        thumbnailHash
        category
        author
+       livepeerID
      }
    }
  `;

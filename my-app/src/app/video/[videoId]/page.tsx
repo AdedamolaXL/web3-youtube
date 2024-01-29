@@ -47,6 +47,7 @@ export default function Video() {
       thumbnailHash
       category
       author
+      livepeerID
       }
     }
   `;
@@ -101,7 +102,7 @@ export default function Video() {
         {video && (
           <div className="flex flex-col m-10 justify-between      lg:flex-row">
             <div className="lg:w-4/6 w-6/6">
-              <Player id={video.hash} />
+              <Player id={video.livepeerID} />
               <div className="border-border-light dark:border-border-dark flex flex-row justify-between border b-2 py-4">
               <div>
                 <h3 className="text-transform: text-2xl capitalize dark:text-white">
