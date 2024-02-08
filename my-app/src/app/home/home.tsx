@@ -8,6 +8,8 @@ import  Videos  from "../../components/Videos";
 import Background from "../../components/Background"
 import Header from "../../layout/Header"
 import Sidebar from "../../layout/Sidebar"
+import { CovalentClient } from "@covalenthq/client-sdk"
+
 
 interface IProps {
   horizontal?: Boolean;
@@ -63,10 +65,25 @@ export default function Home() {
    getVideos();
  }, []);
 
+
+ const ApiServices = async () => {
+     const client = new CovalentClient("cqt_rQY3xTqjrRWyqyMQfbHBp6mrpVqf");
+     try {
+         for await (const resp of client.BaseService.getLogEventsByAddress("matic-mumbai","0x68120Fd3E337221AF1DB7b5C6FF6F601496854Bc")) {
+             console.log(resp);
+         }
+     } catch (error) {
+      console.error("Error in ApiServices:", error);
+     }
+ }
+ 
+useEffect(() => {
+  ApiServices();
+}, []);
   
   return (
       
-        
+      <Background className="w-full">   
         <div className="w-full bg-[#1a1c1f] flex flex-row">
            
              <div className="flex flex-row flex-wrap">
@@ -93,7 +110,7 @@ export default function Home() {
            </div>       
         </div>
         </div>
-        
+      </Background>   
 
   );
 }

@@ -1,19 +1,16 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.9;
 
-contract Youtube {
+contract Pietube {
 
     // Declaring the videoCount 0 by default
     uint256 public videoCount = 0;
 
     // Name of your contract
-    string public name = "Youtube";
-
-    // Creating a mapping of videoCount to videoCount
-    mapping(uint256 => Video) public videos;
+    string public name = "Pietube";
 
     // Create a struct called 'Video' with the following properties:
-    struct Video {
+    struct VideoMetadata {
         uint256 id;
         string hash;
         string title;
@@ -21,11 +18,22 @@ contract Youtube {
         string location;
         string category;
         string thumbnailHash;
-        string date;
-        string duration;
         string livepeerID;
+        uint256 date;
         address author;
     }
+
+    struct VideoParams {
+        uint256 duration;
+        uint256 bitrate;
+        uint256 size;
+    }
+
+    // Mapping to store video metadata
+    mapping(uint256 => VideoMetadata) public videoMetadata;
+
+    // Mapping to store video statistics
+    mapping(uint256 => VideoParams) public videoParams;
 
     // Create a 'VideoUploaded' event that emits the properties of the video
     event VideoUploaded(
@@ -36,13 +44,13 @@ contract Youtube {
         string location,
         string category,
         string thumbnailHash,
-        string date,
-        string duration,
         string livepeerID,
-        address author
+        uint256 date,
+        address author,
+        uint256 duration,
+        uint256 bitrate,
+        uint256 size
     );
-
-    constructor() {}
 
     // Function to upload a video
     function uploadVideo(
@@ -52,9 +60,11 @@ contract Youtube {
         string memory _location,
         string memory _category,
         string memory _thumbnailHash,
-        string memory _date,
-        string memory _duration,
-        string memory _livepeerID
+        string memory _livepeerID,
+        uint256 _date,
+        uint256 _duration,
+        uint256 _bitrate,
+        uint256 _size
     ) public {
         // Validating the video hash, title and author's address
         require(bytes(_videoHash).length > 0);
@@ -64,8 +74,8 @@ contract Youtube {
         // Incrementing the video count 
         videoCount++;
 
-        // Adding the video to the contract
-        videos[videoCount] = Video(
+        // Adding the video metadata to the contract
+        videoMetadata[videoCount] = VideoMetadata(
             videoCount,
             _videoHash,
             _title,
@@ -73,10 +83,16 @@ contract Youtube {
             _location,
             _category,
             _thumbnailHash,
-            _date,
-            _duration,
             _livepeerID,
+            _date,
             msg.sender
+        );
+
+        // Adding the video parameters to the contract
+        videoParams[videoCount] = VideoParams(
+            _duration,
+            _bitrate,
+            _size
         );
 
         // Triggering the event
@@ -88,12 +104,12 @@ contract Youtube {
             _location,
             _category,
             _thumbnailHash,
-            _date,
-            _duration,
             _livepeerID,
-            msg.sender
+            _date,
+            msg.sender,
+             _duration,
+            _bitrate,
+            _size
         );
-
     }
-
 }

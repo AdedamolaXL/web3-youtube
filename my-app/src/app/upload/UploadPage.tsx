@@ -1,19 +1,17 @@
 'use client'
 
-import React, { useState, useRef, useEffect } from "react";
-import { BiCloud, BiMusic, BiPlus } from "react-icons/bi";
-import { create } from "ipfs-http-client";
+import React, { useState, useRef } from "react";
+import { BiCloud, BiPlus } from "react-icons/bi";
 import saveToIPFS from "../../utils/saveToIPFS";
 import { useCreateAsset } from "@livepeer/react";
 import getContract from "../../utils/getContract";
-import uploadToLivepeer from "@/utils/uploadToLivepeer";
 import { LivepeerConfig } from "@livepeer/react";
 import LivepeerClient from "@/clients/livepeer";
 
-type Asset = {
-  name: string;
-  file: File;
-};
+// type Asset = {
+//   name: string;
+//   file: File;
+// };
 
 export type UploadData = {
   video: string | null;
@@ -22,15 +20,23 @@ export type UploadData = {
   location: string;
   category: string;
   thumbnail: string | null;
+  livepeerID: string | null;
   UploadedDate: number;
-  duration: number | null;
-  livepeerID: string | null
+  duration: number | null; 
+  bitrate: number | null;
+  size: number | null;
 };
 
-interface UploadVideoParams {
+// export type UploadVideoParams = {
+
+// }
+
+interface VideoParams {
   videoCID: string | null;
   duration: number | null;
   livepeerID: string | null;
+  bitrate: number | null;
+  size: number | null
 }
 
 export default function UploadPage() {
@@ -50,7 +56,9 @@ export default function UploadPage() {
     thumbnail: '',
     UploadedDate: 0,
     duration: 0,
-    livepeerID: ''
+    livepeerID: '',
+    bitrate: 0,
+    size: 0
   });
 
   
@@ -101,8 +109,10 @@ export default function UploadPage() {
     const videoCID = videoParams?.videoCID ?? '';
     const duration = videoParams?.duration ?? null;
     const livepeerID = videoParams?.livepeerID ?? '';
+    const bitrate = videoParams?.bitrate ?? null;
+    const size = videoParams?.size ?? null;
 
-    console.log(duration, livepeerID, videoCID);
+    console.log(duration, livepeerID, bitrate, size, videoCID);
 
     // Calling the upload thumbnail function and getting the CID
     const thumbnailCID = await uploadThumbnail();
@@ -116,9 +126,11 @@ export default function UploadPage() {
         location,
         category,
         thumbnail: thumbnailCID,
-        UploadedDate: Date.now(),
+        UploadedDate: Date.now(), // dateNow not working
         duration: duration,
-        livepeerID: livepeerID
+        livepeerID: livepeerID,
+        bitrate: bitrate,
+        size: size
       };
       
       // Calling the saveVideo function and passing the metadata object
@@ -147,7 +159,7 @@ export default function UploadPage() {
 
   
   // Function to upload the video to Livepeer
-async function uploadVideo(): Promise<UploadVideoParams | null> {
+async function uploadVideo(): Promise<VideoParams | null> {
   
   await createAsset?.()
 
@@ -169,10 +181,12 @@ async function uploadVideo(): Promise<UploadVideoParams | null> {
     console.log(asset)
 
     // Access the CID and other parameters
-    const videoParams : UploadVideoParams = {
+    const videoParams : VideoParams = {
       videoCID: asset?.storage?.ipfs?.cid || null,
       duration: asset?.videoSpec?.duration || null,
-      livepeerID: asset?.id || null
+      livepeerID: asset?.id || null,
+      bitrate: asset?.videoSpec?.bitrate || null,
+      size: asset?.size || null    
     }
     return videoParams
     
@@ -199,7 +213,9 @@ async function uploadVideo(): Promise<UploadVideoParams | null> {
       data.thumbnail,
       data.UploadedDate,
       data.duration,
-      data.livepeerID
+      data.livepeerID,
+      data.bitrate,
+      data.size
     );
 
     // Log a message indicating that the video was uploaded

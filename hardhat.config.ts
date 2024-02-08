@@ -8,7 +8,15 @@ const PRIVATE_KEY = process.env.PRIVATE_KEY;
 const ALCHEMY_KEY = process.env.ALCHEMY_KEY;
 
 const config: HardhatUserConfig = {
-  solidity: "0.8.19",
+  solidity: {
+    version: "0.8.19",
+    settings:{
+      optimizer: {
+        runs: 200,
+        enabled: true
+      }
+    }
+  },
   networks: {
     mumbai: {
       url: `https://polygon-mumbai.g.alchemy.com/v2/${ALCHEMY_KEY}`,
@@ -18,8 +26,8 @@ const config: HardhatUserConfig = {
       url: `https://testnet-rpc.areon.network`,
       accounts: [`0x${PRIVATE_KEY}`]
     },
-    orb3:{
-      url: `https://test-rpc.orb3.tech`,
+    fuji:{
+      url: `https://api.avax-test.network/ext/bc/C/rpc`,
       accounts: [`0x${PRIVATE_KEY}`]
     },
     ganache: {

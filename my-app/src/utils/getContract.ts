@@ -1,5 +1,5 @@
-import { abi } from "../constants/Youtube";
-import { Contract_Address } from "../constants/Youtube";
+import { abi } from "../constants/areon";
+import { Contract_Address } from "../constants/areon";
 import { ethers } from "ethers";
 
 export default async function getContract() {

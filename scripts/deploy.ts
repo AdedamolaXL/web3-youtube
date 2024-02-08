@@ -8,12 +8,12 @@ async function main() {
   // Hardhat always runs the compile task when running scripts with its command line interface.
 
   // If this script is run directly using `node` you may want to compile manually to make sure everything is compiled manually
-  const Youtube = await ethers.getContractFactory("Youtube");
-  const youtube = await Youtube.deploy();
+  const Pietube = await ethers.getContractFactory("Pietube");
+  const pietube = await Pietube.deploy();
 
-  await youtube.waitForDeployment();
+  await pietube.waitForDeployment();
 
-  console.log(`Youtube deployed to ${youtube.target}`);
+  console.log(`Pietube deployed to ${pietube.target}`);
 }
 
   // We recommend this pattern to be able to use async/await everywhere and properly handle erros

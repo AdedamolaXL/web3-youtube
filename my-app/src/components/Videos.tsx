@@ -15,7 +15,7 @@ const Videos: React.FC<IProps> = ({ horizontal, video }) => {
   const params = useParams <{slug:string}>
 
  return (
-  <Link href={`/video/${video.id}`}>
+  <Link href={`/video/${video.hash}`}>
       <div
         className={`${
           horizontal
