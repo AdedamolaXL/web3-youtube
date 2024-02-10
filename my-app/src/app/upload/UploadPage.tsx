@@ -112,7 +112,16 @@ export default function UploadPage() {
     const bitrate = videoParams?.bitrate ?? null;
     const size = videoParams?.size ?? null;
 
-    console.log(duration, livepeerID, bitrate, size, videoCID);
+    // console.log(duration, livepeerID, bitrate, size, videoCID);
+
+    let twt: number | null = null;
+
+    if (duration !== null) {
+      let wholeDuration: number = Math.ceil(duration);
+      twt = wholeDuration
+    } else {
+
+    }
 
     // Calling the upload thumbnail function and getting the CID
     const thumbnailCID = await uploadThumbnail();
@@ -127,7 +136,7 @@ export default function UploadPage() {
         category,
         thumbnail: thumbnailCID,
         UploadedDate: Date.now(), // dateNow not working
-        duration: duration,
+        duration: twt,
         livepeerID: livepeerID,
         bitrate: bitrate,
         size: size
@@ -211,9 +220,9 @@ async function uploadVideo(): Promise<VideoParams | null> {
       data.location,
       data.category,
       data.thumbnail,
+      data.livepeerID,
       data.UploadedDate,
       data.duration,
-      data.livepeerID,
       data.bitrate,
       data.size
     );
@@ -223,28 +232,7 @@ async function uploadVideo(): Promise<VideoParams | null> {
   };
 
 
-  // fetch("https://api.thegraph.com/subgraphs/name/adedamolaxl/youtube-clone", {
-  //   method: "POST",
-  //   headers: {
-  //     "Content-Type": "application/json",
-  //   },
-  //   body: JSON.stringify({
-  //     query: `
-  //       {
-  //         videos {
-  //           id
-  //           title
-  //           description
-  //           category
-  //           // Add other necessary fields
-  //         }
-  //       }
-  //     `,
-  //   }),
-  // })
-  //   .then(response => response.json())
-  //   .then(data => console.log("GraphQL Query Result:", data))
-  //   .catch(error => console.error("Error fetching videos:", error));
+
 
 
   return (

@@ -1,0 +1,24 @@
+specVersion: 0.0.5
+schema:
+  file: schema.graphql
+dataSources:
+  - kind: ethereum
+    name: Pietube
+    network: fuji
+    source:
+      address: "0xf0251FF9314B3C27E5024015210EBC2D4D269c63"
+      abi: Pietube
+      startBlock: 29822228
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - VideoUploaded
+      abis:
+        - name: Pietube
+          file: Pietube/abis/Pietube.json
+      eventHandlers:
+        - event: VideoUploaded(uint256,string,string,string,string,string,string,string,uint256,address,uint256,uint256,uint256)
+          handler: handleVideoUploaded
+      file: Pietube/Pietube.wasm

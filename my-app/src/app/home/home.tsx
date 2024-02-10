@@ -29,13 +29,19 @@ export default function Home() {
    query {
      videoUploadeds {
        id
-       Youtube_id
+       Pietube_id
        hash
        title
-       thumbnailHash
+       description
+       location
        category
-       author
+       thumbnailHash
        livepeerID
+       date
+       author
+       duration
+       bitrate
+       size
      }
    }
  `;
@@ -66,20 +72,7 @@ export default function Home() {
  }, []);
 
 
- const ApiServices = async () => {
-     const client = new CovalentClient("cqt_rQY3xTqjrRWyqyMQfbHBp6mrpVqf");
-     try {
-         for await (const resp of client.BaseService.getLogEventsByAddress("matic-mumbai","0x68120Fd3E337221AF1DB7b5C6FF6F601496854Bc")) {
-             console.log(resp);
-         }
-     } catch (error) {
-      console.error("Error in ApiServices:", error);
-     }
- }
  
-useEffect(() => {
-  ApiServices();
-}, []);
   
   return (
       

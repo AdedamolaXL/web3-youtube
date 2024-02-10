@@ -1,5 +1,5 @@
-import { abi } from "../constants/areon";
-import { Contract_Address } from "../constants/areon";
+import { abi } from "../constants/avalanche";
+import { Contract_Address } from "../constants/avalanche";
 import { ethers } from "ethers";
 
 export default async function getContract() {

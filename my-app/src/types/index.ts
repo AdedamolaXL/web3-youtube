@@ -6,10 +6,12 @@ export interface IVideo {
     location: string;
     category: string;
     thumbnailHash: string;
-    isAudio: boolean;
-    date: string;
-    duration: string
     livepeerID: string;
+    isAudio: boolean;
+    date: number;
     author: string;
+    duration: number;
+    bitrate: number;
+    size: number;
     createdAt: BigInt;
 }

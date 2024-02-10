@@ -15,9 +15,7 @@ import Player from "@/components/Player";
 import { ApolloProvider } from "@apollo/client";
 import { LivepeerConfig } from "@livepeer/react";
 import LivepeerClient from "@/clients/livepeer";
-import { abi } from "../../../constants/areon";
-import { Contract_Address } from "../../../constants/areon";
-import { ethers } from "ethers";
+
 
 
 export type Video = {
@@ -31,67 +29,85 @@ export default function Video() {
   
   const [video, setVideo] = useState<IVideo | null>(null)
   const [relatedVideos, setRelatedVideos] = useState<IVideo[]>([])
+  const [calculationResult, setCalculationResult] = useState<number | null>(null);
+
 
   const params = useParams();
   const videoid = params.videoid;
 
   console.log(videoid)
+  
   console.log(params)
 
-  // Ethereum provider and contract address (replace these with your actual values)
-  const provider = new ethers.JsonRpcProvider("https://testnet-rpc.areon.network"); 
-  const contract = new ethers.Contract(Contract_Address, abi, provider);
+  const GET_VIDEO_UPLOADS = gql`
+    query {
+      videoUploadeds {
+      id
+      Pietube_id
+      hash
+      title
+      description
+      location
+      category
+      thumbnailHash
+      livepeerID
+      date
+      author
+      duration
+      bitrate
+      size
+      }
+    }
+  `;
 
+  // Function to get the videos from the graph
   const getVideos = async () => {
     try {
-      
+      const { data } = await ApolloClient.query({
+        query: GET_VIDEO_UPLOADS,
+        fetchPolicy: "network-only",
+      });
+  
+    setRelatedVideos(data.videoUploadeds.filter((v: any) => v.hash !== videoid))
+    const video = data?.videoUploadeds?.find((video: any) => (video.hash)=== (videoid))
 
-      // Call the appropriate function on your smart contract to retrieve videos
-      const allVideos = await contract.getVideos();
+    console.log(video)
 
-      // Call the function to get video properties
-      const [videoId, videoHash, videoTitle, videoLivepeerID] = await contract.getVideosWithProperties();
-
-      // Combine video information and properties
-      const videosData = allVideos.map((video: any, index: any) => ({
-        id: Number(video.id),
-        hash: video.hash,
-        title: video.title,
-        description: video.description,
-        thumbnailHash: video.thumbnailHash,
-        duration: video.duration,
-        livepeerID: video.livepeerID,
-        author: video.author    
-        // Add other properties as needed from videoIds, videoHash, etc.
-      }));
-
-      setRelatedVideos(videosData.filter((video:any) => video.hash !== (videoid)));
-      const video = videosData.find((video:any) => video.hash === (videoid));
-
-      console.log(video)
-      
-      if (!video) {
-        console.log(`Video with ID ${videoid} not found.`);
-      } else {
-        console.log('Found video:', video);
-      }
-
-      setVideo(video);
-
-    } catch (error) {
-      console.error("Error fetching videos:", error);
-     
+    if (!video) {
+      console.log(`Video with ID ${videoid} not found.`);
+    } else {
+      console.log('Found video:', video);
     }
+
+    setVideo(video)
+    console.log('videos', data.videoUploadeds)
+    
+ 
+  } catch(err) {
+    console.error("err", err);
+  }
+  
   };
 
   useEffect(() => {
-    // Runs the function getVideos when the component is mounted
-    getVideos();
-  }, [videoid]);
+    getVideos()
+  }, [videoid])
 
-  if (!video) {
-    return <p>Loading...</p>;
-  }
+
+
+    // Conditional rendering
+    if (!video) {
+      // You can render a loading state or return null
+      return <p>Loading...</p>;
+    }
+
+    const handleCalculate = () => {
+      if (video) {
+          const result = (video.duration / 60) * Math.pow(video.bitrate, -0.5) * Math.pow(video.size, 0.8);
+          setCalculationResult(result);
+      }
+    };
+
 
   return (
     
@@ -148,7 +164,20 @@ export default function Video() {
                   </Link>
                 ))}
               </div>
+
+              <div>
+                <button onClick={handleCalculate}>Calculate</button>
+              </div>
+              {calculationResult !== null && (
+                <div>
+                  <p>Calculation Result: {calculationResult}</p>
+                </div>
+              )}
+
             </div>
+
+            
+
         )}
       </div>
     
