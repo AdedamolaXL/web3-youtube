@@ -7,9 +7,11 @@
   "dependencies": {
     "@apollo/client": "^3.8.8",
     "@livepeer/react": "^3.1.9",
+    "@openzeppelin/contracts": "^5.0.1",
     "avvvatars-react": "^0.4.2",
     "dotenv": "^16.3.1",
     "ethers": "^6.9.2",
+    "express": "^4.18.2",
     "graphql": "^16.8.1",
     "ipfs-http-client": "^60.0.1",
     "moment": "^2.30.1",

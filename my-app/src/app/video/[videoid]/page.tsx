@@ -11,10 +11,14 @@ import Avvvatars from 'avvvatars-react'
 import { IVideo } from "@/types";
 import { gql } from "@apollo/client";
 import Player from "@/components/Player";
+import getToken from "@/utils/getToken";
+import { getUserAddress } from "@/utils/getUserAddress";
 
 import { ApolloProvider } from "@apollo/client";
 import { LivepeerConfig } from "@livepeer/react";
 import LivepeerClient from "@/clients/livepeer";
+
+import axios from 'axios';
 
 
 
@@ -30,6 +34,7 @@ export default function Video() {
   const [video, setVideo] = useState<IVideo | null>(null)
   const [relatedVideos, setRelatedVideos] = useState<IVideo[]>([])
   const [calculationResult, setCalculationResult] = useState<number | null>(null);
+  const [userAddress, setUserAddress] = useState<string>("");
 
 
   const params = useParams();
@@ -62,30 +67,34 @@ export default function Video() {
 
   // Function to get the videos from the graph
   const getVideos = async () => {
+
+
     try {
       const { data } = await ApolloClient.query({
         query: GET_VIDEO_UPLOADS,
         fetchPolicy: "network-only",
       });
   
-    setRelatedVideos(data.videoUploadeds.filter((v: any) => v.hash !== videoid))
-    const video = data?.videoUploadeds?.find((video: any) => (video.hash)=== (videoid))
+      setRelatedVideos(data.videoUploadeds.filter((v: any) => v.hash !== videoid))
+      const video = data?.videoUploadeds?.find((video: any) => (video.hash)=== (videoid))
 
-    console.log(video)
+      console.log(video)
 
-    if (!video) {
-      console.log(`Video with ID ${videoid} not found.`);
-    } else {
-      console.log('Found video:', video);
-    }
+      if (!video) {
+        console.log(`Video with ID ${videoid} not found.`);
+      } else {
+        console.log('Found video:', video);
+      }
 
-    setVideo(video)
-    console.log('videos', data.videoUploadeds)
-    
- 
-  } catch(err) {
+      setVideo(video)
+      console.log('videos', data.videoUploadeds)
+      
+      const address = await getUserAddress();
+      setUserAddress(address);
+
+    } catch(err) {
     console.error("err", err);
-  }
+    }
   
   };
 
@@ -104,7 +113,32 @@ export default function Video() {
     const handleCalculate = () => {
       if (video) {
           const result = (video.duration / 60) * Math.pow(video.bitrate, -0.5) * Math.pow(video.size, 0.8);
-          setCalculationResult(result);
+          const token = Math.ceil(result)
+          console.log(token)
+          setCalculationResult(token);
+      }
+    };
+
+
+
+    const mintTokens = async () => {
+      try {
+        if (calculationResult && userAddress) {
+          // let transaction = await getToken()
+
+          // await transaction.mint(userAddress, calculationResult);
+          // console.log("Tokens minted successfully:", calculationResult + 'Pi', userAddress)
+          
+          const response = await axios.post("/mintTokens", {
+            amount: calculationResult,
+            address: userAddress,
+          });
+
+          console.log("Tokens minted successfully:", response.data)
+        
+        }
+      } catch (error) {
+        console.error("error minting", error);
       }
     };
 
@@ -171,6 +205,7 @@ export default function Video() {
               {calculationResult !== null && (
                 <div>
                   <p>Calculation Result: {calculationResult}</p>
+                  <button onClick={mintTokens}>Mint Tokens</button>
                 </div>
               )}
 

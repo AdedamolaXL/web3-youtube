@@ -9,7 +9,7 @@ const ALCHEMY_KEY = process.env.ALCHEMY_KEY;
 
 const config: HardhatUserConfig = {
   solidity: {
-    version: "0.8.19",
+    version: "0.8.20",
     settings:{
       optimizer: {
         runs: 200,
