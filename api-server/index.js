@@ -11,8 +11,8 @@ const port = 5000;
 const provider = new ethers.JsonRpcProvider('https://api.avax-test.network/ext/bc/C/rpc');
 const wallet = new ethers.Wallet(PRIVATE_KEY, provider);
 const Token_Address = '0x44d52D9F508F6F6378b9e9bbC74cEB4f394CbC32';
-const address = '0xAADa3A46D4A94593CaB32484279B86A4AfD149B0';
-const amount = 100;
+// const address = '0xAADa3A46D4A94593CaB32484279B86A4AfD149B0';
+// const amount = 100;
 const tokenContract = new ethers.Contract(Token_Address, Token_ABI, wallet);
 
 app.use(cors()); // Add this line to enable CORS for all routes
