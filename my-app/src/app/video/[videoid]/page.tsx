@@ -129,12 +129,12 @@ export default function Video() {
           // await transaction.mint(userAddress, calculationResult);
           // console.log("Tokens minted successfully:", calculationResult + 'Pi', userAddress)
           
-          const response = await axios.post("http://localhost:5000/mintTokens", {
+          const res = await axios.post("https://api-service-6nks.onrender.com/mintTokens", {
             amount: calculationResult,
             address: userAddress,
           });
 
-          console.log("Tokens minted successfully:", response.data)
+          console.log("Tokens minted successfully:", res.data)
         
         }
       } catch (error) {
