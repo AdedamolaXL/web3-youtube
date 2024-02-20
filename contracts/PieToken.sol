@@ -10,4 +10,8 @@ contract PieToken is ERC20 {
     function mint(address to, uint256 amount) public {
         _mint(to, amount);
     }
+
+     function mintTo(address recipient, uint256 amount) public {
+        _mint(recipient, amount);
+    }
 }

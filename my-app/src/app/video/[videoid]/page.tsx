@@ -11,7 +11,6 @@ import Avvvatars from 'avvvatars-react'
 import { IVideo } from "@/types";
 import { gql } from "@apollo/client";
 import Player from "@/components/Player";
-import getToken from "@/utils/getToken";
 import { getUserAddress } from "@/utils/getUserAddress";
 
 import { ApolloProvider } from "@apollo/client";
@@ -35,7 +34,8 @@ export default function Video() {
   const [relatedVideos, setRelatedVideos] = useState<IVideo[]>([])
   const [calculationResult, setCalculationResult] = useState<number | null>(null);
   const [userAddress, setUserAddress] = useState<string>("");
-
+  // const [loading, setLoading] = useState<boolean>(false);
+  // const [mintTimeout, setMintTimeout] = useState<boolean>(false);
 
   const params = useParams();
   const videoid = params.videoid;
@@ -119,20 +119,26 @@ export default function Video() {
       }
     };
 
-
+    console.log(video.author)
+    console.log(userAddress)
 
     const mintTokens = async () => {
       try {
-        if (calculationResult && userAddress) {
+        if (calculationResult && userAddress && video.hash) {
           // let transaction = await getToken()
+
 
           // await transaction.mint(userAddress, calculationResult);
           // console.log("Tokens minted successfully:", calculationResult + 'Pi', userAddress)
           
-          const res = await axios.post("https://api-service-6nks.onrender.com/mintTokens", {
-            amount: calculationResult,
-            address: userAddress,
-          });
+          const res  = await axios.post("https://api-service-6nks.onrender.com/mintTokens", {
+              amount: calculationResult,
+              address: userAddress,
+              hash: video.hash,
+              author: video.author
+            });
+            
+   
 
           console.log("Tokens minted successfully:", res.data)
         
@@ -141,6 +147,7 @@ export default function Video() {
         console.error("error minting", error);
       }
     };
+
 
 
   return (

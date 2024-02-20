@@ -14,7 +14,7 @@ app.use(express.json());
 
 const provider = new ethers.JsonRpcProvider('https://api.avax-test.network/ext/bc/C/rpc');
 const wallet = new ethers.Wallet(PRIVATE_KEY, provider);
-const Token_Address = '0x44d52D9F508F6F6378b9e9bbC74cEB4f394CbC32';
+const Token_Address = '0x0d069AAA384E32A4D93db1Eef0261f720AC0fbb6';
 // const address = '0xAADa3A46D4A94593CaB32484279B86A4AfD149B0';
 // const amount = 100;
 const tokenContract = new ethers.Contract(Token_Address, Token_ABI, wallet);
@@ -29,15 +29,22 @@ app.post('/mintTokens', async (req, res) => {
     console.log('POST request received at /mintTokens')
     console.log('Request Body:', req.body);;
     try {
-        const { amount, address} = req.body;
-        if (!amount || !address) {
+        const { amount, address, hash, author} = req.body;
+        if (!amount || !address || !hash || !author) {
             throw new Error('Amount or address is missing in request body');
         }
 
-        const tokenMint = await tokenContract.mint(address, amount);
-        const receipt = await tokenMint.wait();
-        console.log('Transaction Receipt:', receipt);
-        res.send(`Tokens transferred to ${address}`);
+        const splitAmount = amount / 3;
+
+        const tokenMintAddress = await tokenContract.mint(address, splitAmount);
+        const receiptAddress = await tokenMint.wait();
+        console.log('Transaction Receipt:', receiptAddress);
+
+        const tokenMintAuthor = await tokenContract.mint(author, splitAmount);
+        const receiptAuthor = await tokenContract.mint(author, splitAmount);
+        console.log('Transaction Receipt:', receiptAuthor)
+
+        res.send(`Tokens transferred: ${splitAmount} to ${address}, ${splitAmount} to ${author}, ${splitAmount} to ${address}`);
     } catch (error) {
         console.error('Error minting tokens:', error);
         res.status(500).send('Error minting tokens');

@@ -4,50 +4,50 @@ import React, { useEffect, useState } from 'react'
 
 const Landing = () => {
 
-    const [isConnected, setIsConnected] = useState(false);
+    // const [isConnected, setIsConnected] = useState(false);
     
-    // Creating a function to connect user's wallet
-    const connectWallet = async () => {
-        try {
-            const { ethereum } = window;
+    // // Creating a function to connect user's wallet
+    // const connectWallet = async () => {
+    //     try {
+    //         const { ethereum } = window;
         
 
-        // Checking if user has Metamask installed
-        if (!ethereum) {
+    //     // Checking if user has Metamask installed
+    //     if (!ethereum) {
             
-            //if user doesn't have metamask installed, throw an error
-            alert("Please install Metamask");
-            return;
-        }
+    //         //if user doesn't have metamask installed, throw an error
+    //         alert("Please install Metamask");
+    //         return;
+    //     }
 
-        // If user has metamask installed, connect to user's wallet
-        const accounts = await ethereum.request({
-            method: "eth_requestAccounts",
-        });
+    //     // If user has metamask installed, connect to user's wallet
+    //     const accounts = await ethereum.request({
+    //         method: "eth_requestAccounts",
+    //     });
 
-        // At last save the user's wallet address in browser's local storage
-        localStorage.setItem("walletAddress", accounts[0]);
-        setIsConnected(true);
-        } catch (error) {
-        console.log(error);
-        }
-    };
+    //     // At last save the user's wallet address in browser's local storage
+    //     localStorage.setItem("walletAddress", accounts[0]);
+    //     setIsConnected(true);
+    //     } catch (error) {
+    //     console.log(error);
+    //     }
+    // };
 
-    // Check for the existing connection on initial render
-    useEffect(() => {
-        const checkExistingConnection = async () => {
-            try {
-                const { ethereum } = window;
-                if (ethereum && ethereum.selectedAddress) {
-                    setIsConnected(true);
-                }
-            } catch (error) {
-                console.log(error);
-            }
-        };
+    // // Check for the existing connection on initial render
+    // useEffect(() => {
+    //     const checkExistingConnection = async () => {
+    //         try {
+    //             const { ethereum } = window;
+    //             if (ethereum && ethereum.selectedAddress) {
+    //                 setIsConnected(true);
+    //             }
+    //         } catch (error) {
+    //             console.log(error);
+    //         }
+    //     };
 
-        checkExistingConnection();
-    }, []);
+    //     checkExistingConnection();
+    // }, []);
 
     
 
@@ -77,7 +77,7 @@ const Landing = () => {
             A Youtube CLone built on top of Polygon network, allows users to create, share and watch videos, without worrying about their privacy.
             </p>
 
-            <button 
+            {/* <button 
                 className={`items-center bg-white rounded-full font-medium p-4 shadow-lg
                     ${ isConnected ? "bg-gray-500 text-white" : ""}`}               
                 onClick={() => {
@@ -86,7 +86,7 @@ const Landing = () => {
                 } }
             >
             <span>{ isConnected ? "Wallet Connected" : "Connect wallet" }</span>
-            </button>
+            </button> */}
         </div>
         </div>
         </div>
